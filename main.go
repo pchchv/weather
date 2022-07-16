@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
+	"os"
 )
 
 type City struct {
@@ -35,10 +37,24 @@ func getJSON(pre string, str string) []byte {
 	return res
 }
 
-func getCityCode(city string) string {
-	var code string
-	//TODO: Get data from JSON
-	return code
+func file_get_contents(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	return ioutil.ReadAll(f)
+}
+
+func getCityCode(city string) {
+	var c City
+	content, err := file_get_contents("city.list.json")
+	if err != nil {
+		log.Panic(err)
+	}
+	err = json.Unmarshal([]byte(content), &c)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func getData(code string) {
