@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type City struct {
@@ -86,7 +90,29 @@ func getCityData(city string) City {
 }
 
 func getData(city City) {
-	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%v&lon=%v&appid=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIKEY"))
+	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?units=metric&lat=%v&lon=%v&appid=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIKEY"))
+	res, err := http.Get(url)
+	if err != nil {
+		log.Panic(err)
+	}
+	if res.StatusCode != http.StatusOK {
+		log.Panic(errors.New("status not OK"))
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Panic(err)
+		}
+	}(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+	b := string(body)
+	fmt.Println(b)
 }
 
 func main() {
