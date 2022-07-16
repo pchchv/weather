@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
 )
 
 type City struct {
-	Id      uint64      `json:"id"`
+	Id      float64     `json:"id"`
 	Name    string      `json:"name"`
 	State   string      `json:"state"`
 	Country string      `json:"country"`
@@ -45,8 +46,9 @@ func file_get_contents(path string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-func getCityCode(city string) {
-	var c City
+func getCityData(city string) City {
+	var res City
+	var c []City
 	content, err := file_get_contents("city.list.json")
 	if err != nil {
 		log.Panic(err)
@@ -55,9 +57,19 @@ func getCityCode(city string) {
 	if err != nil {
 		log.Panic(err)
 	}
+	for _, v := range c {
+		if v.Name == city {
+			res = v
+			break
+		}
+	}
+	if res.Id == 0 {
+		log.Panic(errors.New("City not found"))
+	}
+	return res
 }
 
-func getData(code string) {
+func getData(city City) {
 	// TODO: get data from API
 }
 

@@ -14,9 +14,9 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 }
 
 func weather(w http.ResponseWriter, r *http.Request) {
-	city := r.URL.Query().Get("city")
-	code := getCityCode(city)
-	getData(code)
+	c := r.URL.Query().Get("city")
+	city := getCityData(c)
+	getData(city)
 }
 
 func server() {
