@@ -13,13 +13,15 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func getTime(w http.ResponseWriter, r *http.Request) {
+func weather(w http.ResponseWriter, r *http.Request) {
 	city := r.URL.Query().Get("city")
+	code := getCityCode(city)
+	getData(code)
 }
 
 func server() {
 	log.Println("Server started!")
 	http.HandleFunc("/ping", ping)
-	http.HandleFunc("/time", getTime)
+	http.HandleFunc("/weather", weather)
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
