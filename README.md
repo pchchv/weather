@@ -12,3 +12,7 @@
 /weather — Getting only the weather
     example: http://localhost:8080/time?city=Porto
 ```
+### Params for ```.env``` file
+```
+APIKEY=000000000000000  //for service openweathermap.org
+```

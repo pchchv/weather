@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -19,6 +20,21 @@ type City struct {
 type Coordinates struct {
 	Longitude float64 `json:"lon"`
 	Latitude  float64 `json:"lat"`
+}
+
+func init() {
+	// Load values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Panic("No .env file found")
+	}
+}
+
+func getEnvValue(v string) string {
+	value, exist := os.LookupEnv(v)
+	if !exist {
+		log.Panicf("Value %v does not exist", v)
+	}
+	return value
 }
 
 func getJSON(pre string, str string) []byte {
@@ -70,7 +86,7 @@ func getCityData(city string) City {
 }
 
 func getData(city City) {
-	// TODO: get data from API
+	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%v&lon=%v&appid=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIKEY"))
 }
 
 func main() {
