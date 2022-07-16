@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -16,7 +17,12 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 func weather(w http.ResponseWriter, r *http.Request) {
 	c := r.URL.Query().Get("city")
 	city := getCityData(c)
-	getData(city)
+	weather := getData(city)
+	resp := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", c, weather["temp"].(float64))
+	_, err := w.Write(getJSON("", resp))
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func server() {

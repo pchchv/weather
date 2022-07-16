@@ -89,7 +89,8 @@ func getCityData(city string) City {
 	return res
 }
 
-func getData(city City) {
+func getData(city City) map[string]interface{} {
+	var data map[string]interface{}
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?units=metric&lat=%v&lon=%v&appid=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIKEY"))
 	res, err := http.Get(url)
 	if err != nil {
@@ -111,8 +112,10 @@ func getData(city City) {
 	if err != nil {
 		log.Panic(err)
 	}
-	b := string(body)
-	fmt.Println(b)
+	if err := json.Unmarshal(body, &data); err != nil {
+		log.Panic(err)
+	}
+	return data["main"].(map[string]interface{})
 }
 
 func main() {
