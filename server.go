@@ -8,7 +8,7 @@ import (
 
 func ping(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write(getJSON("", "Weather Service. Version 0.2"))
+	_, err := w.Write(getJSON("", "Weather Service. Version 1.0"))
 	if err != nil {
 		log.Panic(err)
 	}
