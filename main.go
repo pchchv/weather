@@ -115,7 +115,12 @@ func getData(city City) map[string]interface{} {
 	if err := json.Unmarshal(body, &data); err != nil {
 		log.Panic(err)
 	}
-	return data["main"].(map[string]interface{})
+	return data
+}
+
+func getWeather(data map[string]interface{}) float64 {
+	data = data["main"].(map[string]interface{})
+	return data["temp"].(float64)
 }
 
 func main() {

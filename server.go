@@ -17,8 +17,9 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 func weather(w http.ResponseWriter, r *http.Request) {
 	c := r.URL.Query().Get("city")
 	city := getCityData(c)
-	weather := getData(city)
-	resp := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", c, weather["temp"].(float64))
+	data := getData(city)
+	weather := getWeather(data)
+	resp := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", c, weather)
 	_, err := w.Write(getJSON("", resp))
 	if err != nil {
 		log.Panic(err)
