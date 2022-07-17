@@ -8,13 +8,13 @@ import (
 
 func ping(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write(getJSON("", "Weather Service. Version 0.0.1"))
+	_, err := w.Write(getJSON("", "Weather Service. Version 0.2"))
 	if err != nil {
 		log.Panic(err)
 	}
 }
 
-func weather(w http.ResponseWriter, r *http.Request) {
+func cityWeather(w http.ResponseWriter, r *http.Request) {
 	c := r.URL.Query().Get("city")
 	city := getCityData(c)
 	data := getData(city)
@@ -26,9 +26,21 @@ func weather(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func cityTime(w http.ResponseWriter, r *http.Request) {
+	c := r.URL.Query().Get("city")
+	city := getCityData(c)
+	time := getTime(city)
+	resp := fmt.Sprintf("Time in %v now: %v", c, time)
+	_, err := w.Write(getJSON("", resp))
+	if err != nil {
+		log.Panic(err)
+	}
+}
+
 func server() {
 	log.Println("Server started!")
 	http.HandleFunc("/ping", ping)
-	http.HandleFunc("/weather", weather)
+	http.HandleFunc("/weather", cityWeather)
+	http.HandleFunc("/time", cityTime)
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }

@@ -2,11 +2,11 @@
 ## HTTP Methods
 ```
 /stats — Getting the time and weather
-    example: http://localhost:8080/stats?city=Los_Angeles
+    example: http://localhost:8080/stats?city=Los%20Angeles
 ```
 ```
 /time — Getting only the time
-    example: http://localhost:8080/time?city=Siem_Reap
+    example: http://localhost:8080/time?city=Siem Reap
 ```
 ```
 /weather — Getting only the weather
