@@ -55,10 +55,11 @@ func cityStats(w http.ResponseWriter, r *http.Request) {
 }
 
 func server() {
+	mux := http.NewServeMux()
 	log.Println("Server started!")
-	http.HandleFunc("/ping", ping)
-	http.HandleFunc("/weather", cityWeather)
-	http.HandleFunc("/time", cityTime)
-	http.HandleFunc("/stats", cityStats)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	mux.HandleFunc("/ping", ping)
+	mux.HandleFunc("/weather", cityWeather)
+	mux.HandleFunc("/time", cityTime)
+	mux.HandleFunc("/stats", cityStats)
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
