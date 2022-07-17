@@ -28,11 +28,12 @@ type Coordinates struct {
 }
 
 type Weather struct {
+	City        string
 	Temperature float64
 	Humidity    float64
 	Pressure    float64
 	Clouds      string
-	Wind        float64
+	WindSpeed   float64
 }
 
 type Time struct {
@@ -138,14 +139,34 @@ func getWeatherData(city City) map[string]interface{} {
 }
 
 func getWeather(city string) []byte {
-	//TODO: humidity, pressure, clouds, wind
+	var temp float64
+	var humidity float64
+	var pressure float64
+	var clouds string
+	var windSpeed float64
 	cityData := getCityData(city)
 	weather := getWeatherData(cityData)
-	fmt.Println(weather)
-	weather = weather["main"].(map[string]interface{})
-	temp := weather["temp"].(float64)
-	resString := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", city, temp)
-	return getJSON("", resString)
+	for i, j := range weather {
+		switch i {
+		case "main":
+			w := j.(map[string]interface{})
+			temp = w["temp"].(float64)
+			humidity = w["temp"].(float64)
+			pressure = w["pressure"].(float64)
+		case "weather":
+			w := j.([]interface{})[0].(map[string]interface{})
+			clouds = w["description"].(string)
+		case "wind":
+			w := j.(map[string]interface{})
+			windSpeed = w["speed"].(float64)
+		}
+	}
+	resWeather := Weather{city, temp, humidity, pressure, clouds, windSpeed}
+	w, err := json.MarshalIndent(resWeather, "  ", "\t")
+	if err != nil {
+		log.Panic(err)
+	}
+	return w
 }
 
 func getTimeData(city City) string {
@@ -183,7 +204,7 @@ func getTime(city string) []byte {
 	date := dt[0]
 	time := dt[1]
 	t := Time{date, time}
-	b, err := json.MarshalIndent(t, "  ", "\t")
+	d, err := json.MarshalIndent(t, "  ", "\t")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -191,8 +212,19 @@ func getTime(city string) []byte {
 	if err != nil {
 		log.Panic(err)
 	}
-	res = append(res, b...)
+	res = append(res, d...)
 	return res
+}
+
+func prnt(w map[string]interface{}) {
+	for i, j := range w {
+		fmt.Println(i)
+		fmt.Println(j)
+		fmt.Println()
+	}
+	fmt.Println()
+	fmt.Println()
+	fmt.Println()
 }
 
 func main() {
