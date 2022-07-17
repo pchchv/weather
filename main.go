@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -24,6 +25,24 @@ type City struct {
 type Coordinates struct {
 	Longitude float64 `json:"lon"`
 	Latitude  float64 `json:"lat"`
+}
+
+type Weather struct {
+	Temperature float64
+	Humidity    float64
+	Pressure    float64
+	Clouds      string
+	Wind        float64
+}
+
+type Time struct {
+	Date string
+	Time string
+}
+
+type Statistic struct {
+	Weather Weather
+	Time    Time
 }
 
 func init() {
@@ -119,8 +138,10 @@ func getWeatherData(city City) map[string]interface{} {
 }
 
 func getWeather(city string) []byte {
+	//TODO: humidity, pressure, clouds, wind
 	cityData := getCityData(city)
 	weather := getWeatherData(cityData)
+	fmt.Println(weather)
 	weather = weather["main"].(map[string]interface{})
 	temp := weather["temp"].(float64)
 	resString := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", city, temp)
@@ -158,9 +179,20 @@ func getTimeData(city City) string {
 
 func getTime(city string) []byte {
 	cityData := getCityData(city)
-	time := getTimeData(cityData)
-	resString := fmt.Sprintf("Time in %v now: %v", city, time)
-	return getJSON("", resString)
+	dt := strings.Split(getTimeData(cityData), " ")
+	date := dt[0]
+	time := dt[1]
+	t := Time{date, time}
+	b, err := json.MarshalIndent(t, "  ", "\t")
+	if err != nil {
+		log.Panic(err)
+	}
+	res, err := json.Marshal(city + ": ")
+	if err != nil {
+		log.Panic(err)
+	}
+	res = append(res, b...)
+	return res
 }
 
 func main() {
