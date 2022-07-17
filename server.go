@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -25,12 +24,10 @@ func cityWeather(w http.ResponseWriter, r *http.Request) {
 }
 
 func cityTime(w http.ResponseWriter, r *http.Request) {
-	c := r.URL.Query().Get("city")
-	city := getCityData(c)
+	city := r.URL.Query().Get("city")
 	time := getTime(city)
-	resp := fmt.Sprintf("Time in %v now: %v", c, time)
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write(getJSON("", resp))
+	_, err := w.Write(time)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -41,7 +38,7 @@ func cityStats(w http.ResponseWriter, r *http.Request) {
 	weather := getWeather(city)
 	time := getTime(city)
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write(resp)
+	_, err := w.Write(append(time, weather...))
 	if err != nil {
 		log.Panic(err)
 	}

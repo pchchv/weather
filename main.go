@@ -123,11 +123,11 @@ func getWeather(city string) []byte {
 	weather := getWeatherData(cityData)
 	weather = weather["main"].(map[string]interface{})
 	temp := weather["temp"].(float64)
-	resSting := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", city, temp)
-	return getJSON("", resSting)
+	resString := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", city, temp)
+	return getJSON("", resString)
 }
 
-func getTime(city City) string {
+func getTimeData(city City) string {
 	var data map[string]interface{}
 	url := fmt.Sprintf("http://api.geonames.org/timezoneJSON?lat=%v&lng=%v&username=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIUSER"))
 	res, err := http.Get(url)
@@ -154,6 +154,13 @@ func getTime(city City) string {
 		log.Panic(err)
 	}
 	return data["time"].(string)
+}
+
+func getTime(city string) []byte {
+	cityData := getCityData(city)
+	time := getTimeData(cityData)
+	resString := fmt.Sprintf("Time in %v now: %v", city, time)
+	return getJSON("", resString)
 }
 
 func main() {
