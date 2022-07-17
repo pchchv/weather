@@ -208,12 +208,7 @@ func getTime(city string) []byte {
 	if err != nil {
 		log.Panic(err)
 	}
-	res, err := json.Marshal(city + ": ")
-	if err != nil {
-		log.Panic(err)
-	}
-	res = append(res, d...)
-	return res
+	return d
 }
 
 func prnt(w map[string]interface{}) {

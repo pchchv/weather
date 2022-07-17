@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -26,8 +27,13 @@ func cityWeather(w http.ResponseWriter, r *http.Request) {
 func cityTime(w http.ResponseWriter, r *http.Request) {
 	city := r.URL.Query().Get("city")
 	time := getTime(city)
+	res, err := json.Marshal(city + ": ")
+	if err != nil {
+		log.Panic(err)
+	}
+	res = append(res, time...)
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write(time)
+	_, err = w.Write(res)
 	if err != nil {
 		log.Panic(err)
 	}
