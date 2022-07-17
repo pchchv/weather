@@ -89,7 +89,7 @@ func getCityData(city string) City {
 	return res
 }
 
-func getData(city City) map[string]interface{} {
+func getWeatherData(city City) map[string]interface{} {
 	var data map[string]interface{}
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?units=metric&lat=%v&lon=%v&appid=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIKEY"))
 	res, err := http.Get(url)
@@ -118,9 +118,13 @@ func getData(city City) map[string]interface{} {
 	return data
 }
 
-func getWeather(data map[string]interface{}) float64 {
-	data = data["main"].(map[string]interface{})
-	return data["temp"].(float64)
+func getWeather(city string) []byte {
+	cityData := getCityData(city)
+	weather := getWeatherData(cityData)
+	weather = weather["main"].(map[string]interface{})
+	temp := weather["temp"].(float64)
+	resSting := fmt.Sprintf("The temperature in %v is %v degrees Celsius.", city, temp)
+	return getJSON("", resSting)
 }
 
 func getTime(city City) string {
