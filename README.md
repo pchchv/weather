@@ -14,5 +14,6 @@
 ```
 ### Params for ```.env``` file
 ```
-APIKEY=000000000000000  //for service openweathermap.org
+APIKEY=000000000000000  // for service openweathermap.org
+APIUSER=user            // for service geonames.org
 ```

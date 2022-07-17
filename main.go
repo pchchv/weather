@@ -123,6 +123,35 @@ func getWeather(data map[string]interface{}) float64 {
 	return data["temp"].(float64)
 }
 
+func getTime(city City) string {
+	var data map[string]interface{}
+	url := fmt.Sprintf("http://api.geonames.org/timezoneJSON?lat=%v&lng=%v&username=%v", city.Coord.Latitude, city.Coord.Longitude, getEnvValue("APIUSER"))
+	res, err := http.Get(url)
+	if err != nil {
+		log.Panic(err)
+	}
+	if res.StatusCode != http.StatusOK {
+		log.Panic(errors.New("status not OK"))
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Panic(err)
+		}
+	}(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+	if err := json.Unmarshal(body, &data); err != nil {
+		log.Panic(err)
+	}
+	return data["time"].(string)
+}
+
 func main() {
 	server()
 }
