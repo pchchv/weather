@@ -72,14 +72,6 @@ func TestServerWeather(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	b := string(body)
-	if !strings.Contains(b, "Weather Service") {
-		t.Fatal()
-	}
 }
 
 func TestLoadWeather(t *testing.T) {
@@ -115,14 +107,6 @@ func TestServerTime(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	b := string(body)
-	if !strings.Contains(b, "Weather Service") {
-		t.Fatal()
-	}
 }
 
 func TestLoadTime(t *testing.T) {
@@ -157,14 +141,6 @@ func TestServerStats(t *testing.T) {
 	}(res.Body)
 	if err != nil {
 		t.Fatal(err)
-	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	b := string(body)
-	if !strings.Contains(b, "Weather Service") {
-		t.Fatal()
 	}
 }
 
